@@ -28,9 +28,9 @@ public class WishlistServiceImpl implements WishlistService {
             @Override
             public <K, V> List<Object> execute(RedisOperations<K, V> operations) throws DataAccessException {
                 operations.multi();
-                String key = "product2user:" + map.get("productNo");
+                String key = "wishlist:product-to-user:" + map.get("productNo");
                 operations.opsForSet().add((K) key, (V) map.get("userNo"));
-                key = "user2product:" + map.get("userNo");
+                key = "wishlist:user-to-product:" + map.get("userNo");
                 operations.opsForSet().add((K) key, (V) map.get("productNo"));
                 return operations.exec();
             }
@@ -41,13 +41,13 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public Long getProductWishNum(String productNo) {
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        return setOperations.size("product2user" + productNo);
+        return setOperations.size("wishlist:product-to-user" + productNo);
     }
 
     @Override
     public Set getWishList(String userNo) {
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        return setOperations.members("user2product:" + userNo);
+        return setOperations.members("wishlist:user-to-product:" + userNo);
     }
 
     @Override
@@ -56,9 +56,9 @@ public class WishlistServiceImpl implements WishlistService {
             @Override
             public <K, V> List<Object> execute(RedisOperations<K, V> operations) throws DataAccessException {
                 operations.multi();
-                String key = "product2user:" + map.get("productNo");
+                String key = "wishlist:product-to-user:" + map.get("productNo");
                 operations.opsForSet().remove((K) key, (V) map.get("userNo"));
-                key = "user2product:" + map.get("userNo");
+                key = "wishlist:user-to-product:" + map.get("userNo");
                 operations.opsForSet().remove((K) key, (V) map.get("productNo"));
                 return operations.exec();
             }
