@@ -1,6 +1,6 @@
-package com.booklog.payment.controller;
+package com.booklog.payment.wishlist.controller;
 
-import com.booklog.payment.service.WishlistService;
+import com.booklog.payment.wishlist.service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

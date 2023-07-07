@@ -1,4 +1,4 @@
-package com.booklog.payment.service;
+package com.booklog.payment.wishlist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

@@ -1,4 +1,4 @@
-package com.booklog.payment.service;
+package com.booklog.payment.wishlist.service;
 
 import java.util.List;
 import java.util.Map;

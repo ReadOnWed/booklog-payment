@@ -1,4 +1,4 @@
-package com.booklog.payment.repository;
+package com.booklog.payment.wishlist.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
