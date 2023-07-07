@@ -15,7 +15,7 @@ import java.util.Set;
 @Service
 public class WishlistServiceImpl implements WishlistService {
 
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     public WishlistServiceImpl(RedisTemplate redisTemplate) {
@@ -24,7 +24,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List wishProduct(Map<String, String> map) {
-        List<Object> execute = redisTemplate.execute(new SessionCallback<List<Object>>() {
+        List<Object> execute = redisTemplate.execute(new SessionCallback<>() {
             @Override
             public <K, V> List<Object> execute(RedisOperations<K, V> operations) throws DataAccessException {
                 operations.multi();
@@ -41,7 +41,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public Long getProductWishNum(String productNo) {
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        return setOperations.size("wishlist:product-to-user" + productNo);
+        return setOperations.size("wishlist:product-to-user:" + productNo);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List unwishProduct(Map<String, String> map) {
-        List<Object> execute = redisTemplate.execute(new SessionCallback<List<Object>>() {
+        List<Object> execute = redisTemplate.execute(new SessionCallback<>() {
             @Override
             public <K, V> List<Object> execute(RedisOperations<K, V> operations) throws DataAccessException {
                 operations.multi();
