@@ -1,17 +1,22 @@
 package com.booklog.payment.wishlist.controller;
 
-import com.booklog.payment.wishlist.service.WishlistService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.booklog.payment.wishlist.service.WishlistService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,95 +24,99 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/wishlist")
 @RequiredArgsConstructor
 public class WishlistController {
-    private final WishlistService wishlistService;
+	private final WishlistService wishlistService;
 
-    @PostMapping("/product")
-    public ResponseEntity<Map<String, String>> wishProduct(@RequestBody Map<String, String> map) {
-        Map<String, String> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.NO_CONTENT;
-        try {
-            List ret = wishlistService.wishProduct(map);
+	@PostMapping("/product")
+	public ResponseEntity<Map<String, String>> wishProduct(@RequestBody Map<String, String> map) {
+		Map<String, String> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.NO_CONTENT;
+		try {
+			List result = wishlistService.wishProduct(map);
 
-            if (ret != null) {
-                HttpHeaders headers = new HttpHeaders();
+			if (result != null) {
+				setHttpHeaders();
 
-                headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+				if (userSaveSuccess(result))
+					resultMap.put("user", "success");
+				if (productSaveSuccess(result))
+					resultMap.put("product", "success");
 
-                if ((Integer) ret.get(0) == 1)
-                    resultMap.put("user", "success");
-                if ((Integer) ret.get(1) == 1)
-                    resultMap.put("product", "success");
+				status = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<>(resultMap, status);
+	}
 
-                status = HttpStatus.ACCEPTED;
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(resultMap, status);
-    }
+	@PostMapping("/product/delete")
+	public ResponseEntity<Map<String, String>> unwishProduct(@RequestBody Map<String, String> map) {
+		Map<String, String> resultMap = new HashMap<>();
 
-    @PostMapping("/product/delete")
-    public ResponseEntity<Map<String, String>> unwishProduct(@RequestBody Map<String, String> map) {
-        Map<String, String> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.NO_CONTENT;
-        try {
-            List ret = wishlistService.unwishProduct(map);
+		List result = wishlistService.unwishProduct(map);
 
-            if (ret != null) {
-                HttpHeaders headers = new HttpHeaders();
+		if (result != null) {
+			if (userSaveSuccess(result))
+				resultMap.put("user", "success");
+			if (productSaveSuccess(result))
+				resultMap.put("product", "success");
 
-                headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+			return ResponseEntity.ok()
+				.headers(setHttpHeaders())
+				.body(resultMap);
+		}
 
-                if ((Integer) ret.get(0) == 1)
-                    resultMap.put("user", "success");
-                if ((Integer) ret.get(1) == 1)
-                    resultMap.put("product", "success");
+		return ResponseEntity.internalServerError()
+			.headers(setHttpHeaders())
+			.body(resultMap);
+	}
 
-                status = HttpStatus.ACCEPTED;
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(resultMap, status);
-    }
+	@PostMapping("/product/{productNo}")
+	public ResponseEntity<Long> getProductWishNum(@PathVariable String productNo) {
+		Long result = wishlistService.getProductWishNum(productNo);
 
-    @PostMapping("/product/{productNo}")
-    public ResponseEntity<Long> getProductWishNum(@PathVariable String productNo) {
-        HttpStatus status = HttpStatus.NO_CONTENT;
-        Long ret = null;
-        try {
-            ret = wishlistService.getProductWishNum(productNo);
+		if (result != null) {
+			setHttpHeaders();
 
-            if (ret != null) {
-                HttpHeaders headers = new HttpHeaders();
+			return ResponseEntity.ok()
+				.headers(setHttpHeaders())
+				.body(result);
+		}
 
-                headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+		return ResponseEntity.internalServerError()
+			.headers(setHttpHeaders())
+			.body(null);
+	}
 
-                status = HttpStatus.ACCEPTED;
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(ret, status);
-    }
+	@PostMapping("/product/user/{userNo}")
+	public ResponseEntity<Set> getWishList(@PathVariable String userNo) {
+		Set result = wishlistService.getWishList(userNo);
 
-    @PostMapping("/product/user/{userNo}")
-    public ResponseEntity<Set> getWishList(@PathVariable String userNo) {
-        Set ret = null;
-        HttpStatus status = HttpStatus.NO_CONTENT;
-        try {
-            ret = wishlistService.getWishList(userNo);
+		if (result != null) {
+			setHttpHeaders();
 
-            if (ret != null) {
-                HttpHeaders headers = new HttpHeaders();
+			return ResponseEntity.ok()
+				.headers(setHttpHeaders())
+				.body(result);
+		}
 
-                headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+		return ResponseEntity.internalServerError()
+			.headers(setHttpHeaders())
+			.body(null);
+	}
 
-                status = HttpStatus.ACCEPTED;
-            }
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(ret, status);
-    }
+	private static boolean productSaveSuccess(List result) {
+		return (Integer)result.get(1) == 1;
+	}
+
+	private static boolean userSaveSuccess(List result) {
+		return (Integer)result.get(0) == 1;
+	}
+
+	private static HttpHeaders setHttpHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+		return headers;
+	}
 }
