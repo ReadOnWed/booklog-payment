@@ -1,7 +1,6 @@
 package com.booklog.payment.wishlist.controller;
 
 import com.booklog.payment.wishlist.service.WishlistService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,15 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/wishlist")
+@RequiredArgsConstructor
 public class WishlistController {
-    private WishlistService wishlistService;
-
-    @Autowired
-    public WishlistController(WishlistService wishlistService) {
-        this.wishlistService = wishlistService;
-    }
+    private final WishlistService wishlistService;
 
     @PostMapping("/product")
     public ResponseEntity<Map<String, String>> wishProduct(@RequestBody Map<String, String> map) {
