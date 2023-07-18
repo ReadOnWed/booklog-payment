@@ -1,6 +1,5 @@
 package com.booklog.payment.product.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,19 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.booklog.payment.product.domain.ProductDto;
 import com.booklog.payment.product.service.ProductService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 	private final ProductService productService;
-
-	/**
-	 * 생성자 의존성 주입 부분
-	 * @param productService
-	 */
-	@Autowired
-	public ProductController(ProductService productService) {
-		this.productService = productService;
-	}
 
 	// Rest API 구현부
 
