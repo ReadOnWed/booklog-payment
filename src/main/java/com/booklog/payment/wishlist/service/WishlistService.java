@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Set;
 
 public interface WishlistService {
-    List wishProduct(Map<String, String> map);
+	List<Object> wishProduct(Map<String, Long> map);
 
-    Long getProductWishNum(String productNo);
+	Long getProductWishNum(String productNo);
 
-    Set getWishList(String userNo);
+	Set<Object> getWishList(String userNo);
 
-    List unwishProduct(Map<String, String> map);
+	List<Object> unwishProduct(Map<String, String> map);
 }
