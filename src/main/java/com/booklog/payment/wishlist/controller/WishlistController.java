@@ -1,6 +1,6 @@
 package com.booklog.payment.wishlist.controller;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +27,11 @@ public class WishlistController {
 	private final WishlistService wishlistService;
 
 	@PostMapping("/product")
-	public ResponseEntity<Map<String, String>> wishProduct(@RequestBody Map<String, String> map) {
+	public ResponseEntity<Map<String, String>> wishProduct(@RequestBody Map<String, Long> map) {
 		Map<String, String> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.NO_CONTENT;
 		try {
-			List result = wishlistService.wishProduct(map);
+			List<Object> result = wishlistService.wishProduct(map);
 
 			if (result != null) {
 				setHttpHeaders();
@@ -53,7 +53,7 @@ public class WishlistController {
 	public ResponseEntity<Map<String, String>> unwishProduct(@RequestBody Map<String, String> map) {
 		Map<String, String> resultMap = new HashMap<>();
 
-		List result = wishlistService.unwishProduct(map);
+		List<Object> result = wishlistService.unwishProduct(map);
 
 		if (result != null) {
 			if (userSaveSuccess(result))
@@ -89,8 +89,8 @@ public class WishlistController {
 	}
 
 	@PostMapping("/product/user/{userNo}")
-	public ResponseEntity<Set> getWishList(@PathVariable String userNo) {
-		Set result = wishlistService.getWishList(userNo);
+	public ResponseEntity<Set<Object>> getWishList(@PathVariable String userNo) {
+		Set<Object> result = wishlistService.getWishList(userNo);
 
 		if (result != null) {
 			setHttpHeaders();
@@ -105,17 +105,17 @@ public class WishlistController {
 			.body(null);
 	}
 
-	private static boolean productSaveSuccess(List result) {
+	private static boolean productSaveSuccess(List<Object> result) {
 		return (Integer)result.get(1) == 1;
 	}
 
-	private static boolean userSaveSuccess(List result) {
+	private static boolean userSaveSuccess(List<Object> result) {
 		return (Integer)result.get(0) == 1;
 	}
 
 	private static HttpHeaders setHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+		headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
 		return headers;
 	}
