@@ -68,7 +68,7 @@ public class ProductDto {
 			.bookId(product.getBookId())
 			.title(product.getTitle())
 			.price(product.getPrice())
-			.condition(product.getCondition())
+			.condition(product.getProductCondition())
 			.createTime(product.getCreateTime())
 			.deliveryPoss(product.getDeliveryPoss())
 			.tradeStatus(product.getTradeStatus())

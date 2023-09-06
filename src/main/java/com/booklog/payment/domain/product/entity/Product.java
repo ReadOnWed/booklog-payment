@@ -13,6 +13,8 @@ import com.booklog.payment.domain.product.dto.ProductTradeStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,12 +40,15 @@ public class Product {
 	private String title;
 	@Column(nullable = false)
 	private Integer price;
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private ProductCondition condition;
+	private ProductCondition productCondition;
 	@CreatedDate
 	private LocalDateTime createTime;
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private ProductDeliveryPoss deliveryPoss;
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private ProductTradeStatus tradeStatus;
 	@Column(nullable = false)
@@ -59,7 +64,8 @@ public class Product {
 	private LocalDateTime updateTime = null;
 
 	@Builder
-	public Product(long productId, long sellerId, long bookId, String title, int price, ProductCondition condition,
+	public Product(long productId, long sellerId, long bookId, String title, int price,
+		ProductCondition productCondition,
 		ProductDeliveryPoss deliveryPoss, ProductTradeStatus tradeStatus, String description, int deliveryFee,
 		String tradeLocation) {
 		this.productId = productId;
@@ -67,7 +73,7 @@ public class Product {
 		this.bookId = bookId;
 		this.title = title;
 		this.price = price;
-		this.condition = condition;
+		this.productCondition = productCondition;
 		this.deliveryPoss = deliveryPoss;
 		this.tradeStatus = tradeStatus;
 		this.description = description;
@@ -81,7 +87,7 @@ public class Product {
 			.bookId(product.getBookId())
 			.title(product.getTitle())
 			.price(product.getPrice())
-			.condition(product.getCondition())
+			.productCondition(product.getCondition())
 			.deliveryPoss(product.getDeliveryPoss())
 			.deliveryFee(product.getDeliveryFee())
 			.tradeLocation(product.getTradeLocation())
@@ -98,8 +104,8 @@ public class Product {
 		this.price = price;
 	}
 
-	public void updateCondition(ProductCondition condition) {
-		this.condition = condition;
+	public void updateCondition(ProductCondition productCondition) {
+		this.productCondition = productCondition;
 	}
 
 	public void updateDeliveryPoss(ProductDeliveryPoss deliveryPoss) {
