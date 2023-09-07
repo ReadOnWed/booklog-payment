@@ -68,6 +68,12 @@ public class ProductServiceImpl implements ProductService {
 		Product product = productRepository.findByProductId(productDto.getProductId())
 			.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_PRODUCT));
 
+		updateProduct(productDto, product);
+
+		return ProductDto.from(product);
+	}
+
+	private static void updateProduct(ProductDto productDto, Product product) {
 		if (productDto.getTitle() != null)
 			product.updateTitle(productDto.getTitle());
 		if (productDto.getPrice() != null)
@@ -85,8 +91,6 @@ public class ProductServiceImpl implements ProductService {
 		if (productDto.getTradeLocation() != null)
 			product.updateTradeLocation(productDto.getTradeLocation());
 		product.updateUpdateTime(LocalDateTime.now());
-
-		return ProductDto.from(product);
 	}
 
 	private static boolean deliveryImposs(ProductDto productDto) {
