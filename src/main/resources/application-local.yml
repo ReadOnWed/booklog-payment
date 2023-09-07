@@ -1,0 +1,25 @@
+# MySQL Configuration
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # DB Source URL
+    url: jdbc:mysql://localhost:3306/booklog-payment?serverTimezone=Asia/Seoul
+    # DB username
+    username: readonwed
+    # DB password
+    password: dev3306
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    # JPA의 구현체인 Hibernate가 동작하면서 발생한 SQL의 가독성을 높여줌
+    properties:
+      hibernate:
+        format_sql: true
+
+  # redis
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      password: test

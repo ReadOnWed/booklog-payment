@@ -1,0 +1,28 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: booklog-payment
+      MYSQL_USER: readonwed
+      MYSQL_PASSWORD: dev3306
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - ./mysql/data:/data
+    container_name: mysql
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    restart: always
+    command: redis-server --requirepass test --port 6379
+
