@@ -13,7 +13,8 @@ public enum ErrorCode {
 
 	// 찜하기 기능
 	NOT_EXIST_WISHLIST(HttpStatus.BAD_REQUEST, "W-001", "존재하지 않는 찜 목록입니다."),
-
+  
+  // 거래 기능
 	NOT_EXIST_TRANSACTION(HttpStatus.BAD_REQUEST, "T-001", "존재하지 않는 거래 내역입니다.");
 
 	ErrorCode(HttpStatus httpStatus, String errorCode, String message) {
